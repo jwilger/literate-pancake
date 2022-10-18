@@ -1,0 +1,238 @@
+name: Elixir CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github Repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - name: Install dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        env:
+          MIX_ENV: test
+        run: |
+          mix local.rebar --force 
+          mix local.hex --force 
+          mix deps.get 
+          mix deps.compile
+  compile:
+    needs: dependencies
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github Repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - name: Build application
+        env:
+          MIX_ENV: test
+        run: mix compile --warnings-as-errors
+
+  mix-test:
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    services:
+      db:
+        image: postgres:latest
+        ports: ['5432:5432']
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Cancel previous runs 
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - run: mix test --warnings-as-errors
+        env:
+          DATABASE_URL: ecto://postgres:postgres@localhost/app
+  mix-format:
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs 
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - run: mix format --check-formatted
+        env:
+          MIX_ENV: test
+  mix-credo:
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs 
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - run: mix credo --strict
+        env:
+          MIX_ENV: test
+  mix-sobelow:
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs 
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - run: mix sobelow -i Config.CSP,Config.HTTPS --exit
+        env:
+          MIX_ENV: test
+  mix-dialyzer:
+    needs: compile
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        elixir: ['1.14.0']
+        otp: ['25.1.1']
+    steps:
+      - name: Cancel previous runs 
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+      - name: Checkout Github repo
+        uses: actions/checkout@v2
+      - name: Sets up an Erlang/OTP environment
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir }}
+          otp-version: ${{ matrix.otp }}
+      - name: Retrieve cached dependencies
+        uses: actions/cache@v2
+        id: mix-cache
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-${{ matrix.otp }}-${{ matrix.elixir }}-${{ hashFiles('mix.lock') }}
+      - run: mix dialyzer --list-unused-filters
+        env:
+          MIX_ENV: test

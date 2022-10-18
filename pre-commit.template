@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+set -e
+
+git stash push --include-untracked --keep-index --quiet --message='Backed up state for the pre-commit hook (if you can see it, something went wrong)'
+
+mix quality
+tests_result=$?
+
+git reset --hard --quiet
+git clean -d --force --quiet
+git stash pop --index --quiet
+
+exit $tests_result
