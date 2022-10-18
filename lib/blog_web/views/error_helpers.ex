@@ -1,4 +1,4 @@
-defmodule BasicPhxAppWeb.ErrorHelpers do
+defmodule BlogWeb.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -39,9 +39,9 @@ defmodule BasicPhxAppWeb.ErrorHelpers do
     # should be written to the errors.po file. The :count option is
     # set by Ecto and indicates we should also apply plural rules.
     if count = opts[:count] do
-      Gettext.dngettext(BasicPhxAppWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(BlogWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(BasicPhxAppWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(BlogWeb.Gettext, "errors", msg, opts)
     end
   end
 end

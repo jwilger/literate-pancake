@@ -1,4 +1,4 @@
-defmodule BasicPhxApp.ConfigHelpers do
+defmodule Blog.ConfigHelpers do
   @moduledoc """
   Helper functions used in config/runtime.exs
   """

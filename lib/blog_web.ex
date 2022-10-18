@@ -1,12 +1,12 @@
-defmodule BasicPhxAppWeb do
+defmodule BlogWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use BasicPhxAppWeb, :controller
-      use BasicPhxAppWeb, :view
+      use BlogWeb, :controller
+      use BlogWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,19 +19,19 @@ defmodule BasicPhxAppWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: BasicPhxAppWeb
+      use Phoenix.Controller, namespace: BlogWeb
 
       import Plug.Conn
-      import BasicPhxAppWeb.Gettext
-      alias BasicPhxAppWeb.Router.Helpers, as: Routes
+      import BlogWeb.Gettext
+      alias BlogWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/basic_phx_app_web/templates",
-        namespace: BasicPhxAppWeb
+        root: "lib/blog_web/templates",
+        namespace: BlogWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -45,7 +45,7 @@ defmodule BasicPhxAppWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {BasicPhxAppWeb.LayoutView, "live.html"}
+        layout: {BlogWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -80,7 +80,7 @@ defmodule BasicPhxAppWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import BasicPhxAppWeb.Gettext
+      import BlogWeb.Gettext
     end
   end
 
@@ -97,9 +97,9 @@ defmodule BasicPhxAppWeb do
 
       import Phoenix.Component
 
-      import BasicPhxAppWeb.ErrorHelpers
-      import BasicPhxAppWeb.Gettext
-      alias BasicPhxAppWeb.Router.Helpers, as: Routes
+      import BlogWeb.ErrorHelpers
+      import BlogWeb.Gettext
+      alias BlogWeb.Router.Helpers, as: Routes
     end
   end
 

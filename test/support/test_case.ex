@@ -1,4 +1,4 @@
-defmodule BasicPhxApp.TestCase do
+defmodule Blog.TestCase do
   @moduledoc """
   Basic test case template for all project tests
   """
@@ -7,7 +7,7 @@ defmodule BasicPhxApp.TestCase do
 
   using do
     quote do
-      import BasicPhxApp.TestCase
+      import Blog.TestCase
     end
   end
 

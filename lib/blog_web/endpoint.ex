@@ -1,12 +1,12 @@
-defmodule BasicPhxAppWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :basic_phx_app
+defmodule BlogWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :blog
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_basic_phx_app_key",
+    key: "_blog_key",
     signing_salt: "e8nlzgq/"
   ]
 
@@ -18,7 +18,7 @@ defmodule BasicPhxAppWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :basic_phx_app,
+    from: :blog,
     gzip: false,
     only: ~w(assets fonts images favicon.ico robots.txt)
 
@@ -28,7 +28,7 @@ defmodule BasicPhxAppWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :basic_phx_app
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :blog
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -46,5 +46,5 @@ defmodule BasicPhxAppWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug BasicPhxAppWeb.Router
+  plug BlogWeb.Router
 end

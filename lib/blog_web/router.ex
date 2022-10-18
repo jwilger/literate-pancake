@@ -1,11 +1,11 @@
-defmodule BasicPhxAppWeb.Router do
-  use BasicPhxAppWeb, :router
+defmodule BlogWeb.Router do
+  use BlogWeb, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {BasicPhxAppWeb.LayoutView, :root}
+    plug :put_root_layout, {BlogWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -14,14 +14,14 @@ defmodule BasicPhxAppWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", BasicPhxAppWeb do
+  scope "/", BlogWeb do
     pipe_through :browser
 
     get "/", PageController, :index
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", BasicPhxAppWeb do
+  # scope "/api", BlogWeb do
   #   pipe_through :api
   # end
 
@@ -38,7 +38,7 @@ defmodule BasicPhxAppWeb.Router do
     scope "/" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: BasicPhxAppWeb.Telemetry
+      live_dashboard "/dashboard", metrics: BlogWeb.Telemetry
     end
   end
 

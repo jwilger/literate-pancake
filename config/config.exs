@@ -1,14 +1,14 @@
 import Config
 
-config :basic_phx_app, ecto_repos: [BasicPhxApp.Repo]
+config :blog, ecto_repos: [Blog.Repo]
 
-config :basic_phx_app, BasicPhxAppWeb.Endpoint,
+config :blog, BlogWeb.Endpoint,
   url: [host: "localhost"],
-  render_errors: [view: BasicPhxAppWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: BasicPhxApp.PubSub,
+  render_errors: [view: BlogWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: Blog.PubSub,
   live_view: [signing_salt: "BiLoaGaG"]
 
-config :basic_phx_app, BasicPhxApp.Mailer, adapter: Swoosh.Adapters.Local
+config :blog, Blog.Mailer, adapter: Swoosh.Adapters.Local
 
 config :swoosh, :api_client, false
 
@@ -40,17 +40,16 @@ config :tailwind,
 
 case config_env() do
   :prod ->
-    config :basic_phx_app, BasicPhxAppWeb.Endpoint,
-      cache_static_manifest: "priv/static/cache_manifest.json"
+    config :blog, BlogWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json"
 
     config :logger, level: :info
 
   :dev ->
-    config :basic_phx_app, BasicPhxApp.Repo,
+    config :blog, Blog.Repo,
       stacktrace: true,
       show_sensitive_data_on_connection_error: true
 
-    config :basic_phx_app, BasicPhxAppWeb.Endpoint,
+    config :blog, BlogWeb.Endpoint,
       http: [ip: {127, 0, 0, 1}, port: 4000],
       check_origin: false,
       code_reloader: true,
@@ -64,8 +63,8 @@ case config_env() do
         patterns: [
           ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
           ~r"priv/gettext/.*(po)$",
-          ~r"lib/basic_phx_app_web/(live|views)/.*(ex)$",
-          ~r"lib/basic_phx_app_web/templates/.*(eex)$"
+          ~r"lib/blog_web/(live|views)/.*(ex)$",
+          ~r"lib/blog_web/templates/.*(eex)$"
         ]
       ]
 
@@ -76,14 +75,14 @@ case config_env() do
     config :phoenix, :plug_init_mode, :runtime
 
   :test ->
-    config :basic_phx_app, BasicPhxAppWeb.Endpoint,
+    config :blog, BlogWeb.Endpoint,
       http: [ip: {127, 0, 0, 1}, port: 4002],
       secret_key_base: "TnKiBnvKiZF7an2UoXNvG+yfyPXo8zvd0ryI2rqPGPs58Z3JWCwmw3DqzvexIzvZ",
       server: false
 
-    config :basic_phx_app, BasicPhxApp.Repo, pool: Ecto.Adapters.SQL.Sandbox
+    config :blog, Blog.Repo, pool: Ecto.Adapters.SQL.Sandbox
 
-    config :basic_phx_app, BasicPhxApp.Mailer, adapter: Swoosh.Adapters.Test
+    config :blog, Blog.Mailer, adapter: Swoosh.Adapters.Test
 
     config :logger, level: :warn
 

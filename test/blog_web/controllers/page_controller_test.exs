@@ -1,5 +1,5 @@
-defmodule BasicPhxAppWeb.PageControllerTest do
-  use BasicPhxAppWeb.ConnCase
+defmodule BlogWeb.PageControllerTest do
+  use BlogWeb.ConnCase
 
   test "GET /", %{conn: conn} do
     conn = get(conn, "/")

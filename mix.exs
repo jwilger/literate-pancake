@@ -1,9 +1,9 @@
-defmodule BasicPhxApp.MixProject do
+defmodule Blog.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :basic_phx_app,
+      app: :blog,
       version: "0.1.0",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -19,7 +19,7 @@ defmodule BasicPhxApp.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {BasicPhxApp.Application, []},
+      mod: {Blog.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
