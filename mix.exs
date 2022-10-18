@@ -90,7 +90,7 @@ defmodule Blog.MixProject do
       quality: [
         "format --check-formatted",
         "compile --warnings-as-errors",
-        "test --warnings-as-errors",
+        "test --warnings-as-errors --raise",
         "credo --strict",
         "sobelow -i Config.CSP --exit",
         "dialyzer --list-unused-filters"
